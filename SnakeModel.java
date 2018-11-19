@@ -5,7 +5,15 @@ import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.util.*;
 
-//import lab1.GoldModel.Directions;
+/**
+ * Snake game
+ * <p>
+ * Initially a gold coin is randomly placed in the matrix and the snakes head is placed at the center of it.
+ * The snake aims to collect coins which disappear after collection. Whenever the snake collects a coin the snake grows by one tile
+ * and a new coin is spawned at a random position in the matrix. The game ends if
+ * the snake head collides with the snakes body, if the snake head collides with a wall or
+ * if the snake grows to be as large as the entire game board.
+ */
 	
 public class SnakeModel extends GameModel{
 	public enum Directions {
@@ -31,7 +39,6 @@ public class SnakeModel extends GameModel{
 			return this.yDelta;
 		}
 	}
-	//private static final int COIN_START_AMOUNT = 1;
 	
 	/** Graphical representation of a coin. */
 	private static final GameTile COIN_TILE = new RoundTile(new Color(255, 215,
@@ -111,31 +118,31 @@ public class SnakeModel extends GameModel{
 	}
 	
 	/**
-	 * Update the direction of the collector
+	 * Update the direction of the snake
 	 * according to the user's keypress.
 	 */
 	private void updateDirection(final int key) {
 		switch (key) {
 			case KeyEvent.VK_LEFT:
-				if(this.direction == Directions.EAST) {
-					break;
+				if(this.direction == Directions.EAST && snakePos.size() > 1) {
+					break; //The snake cannot go backwards.
 				}
 				this.direction = Directions.WEST;
 				break;
 			case KeyEvent.VK_UP:
-				if(this.direction == Directions.SOUTH) {
+				if(this.direction == Directions.SOUTH && snakePos.size() > 1) {
 					break;
 				}
 				this.direction = Directions.NORTH;
 				break;
 			case KeyEvent.VK_RIGHT:
-				if(this.direction == Directions.WEST) {
+				if(this.direction == Directions.WEST && snakePos.size() > 1) {
 					break;
 				}
 				this.direction = Directions.EAST;
 				break;
 			case KeyEvent.VK_DOWN:
-				if(this.direction == Directions.NORTH) {
+				if(this.direction == Directions.NORTH && snakePos.size() > 1) {
 					break;
 				}
 				this.direction = Directions.SOUTH;
@@ -164,53 +171,40 @@ public class SnakeModel extends GameModel{
 	 */
 	@Override
 	public void gameUpdate(final int lastKey) throws GameOverException {
-		updateDirection(lastKey);
-
-		// Erase the previous position.
-		setGameboardState(this.snakePos.getLast(), BLANK_TILE);	
-		
-		if(this.snakePos.size() > 1) {
-		setGameboardState(this.snakePos.getFirst(), BODY_TILE);
-		}
-		// Change snake position.
-		Position tail = new Position(snakePos.getLast().getX(),snakePos.getLast().getY());
+		updateDirection(lastKey);	
 		
 		// End game if snake has crashed into himself
-		
 		if(this.snakePos.contains(getNextSnakePos())) {
 			throw new GameOverException(this.score);
-			
 		}
 		
+		//Add the new position of the head to snakePos
+		setGameboardState(this.snakePos.getFirst(), BODY_TILE);
 		this.snakePos.addFirst(getNextSnakePos());
-		//Change if snake out of bounds
+
 		
+		//Game over if snake is out of bounds
 		if (isOutOfBounds(this.snakePos.getFirst())) {
 			throw new GameOverException(this.score);
 		}
 		
-		//Update snake
-		
-	
-		this.snakePos.removeLast();
-		/** Remove the coin at the new snake head position (if any)
-		 * Add a body part to the snake and add a new coin at a random empty position.
-		 * Draw another coin and the new body part of the snake.
+		/* Remove the coin at the new snake head position (if any) and add a new coin
+		 * Else replace the last part of the snake with a blank tile and 
+		 * remove the last part from snakePos.
 		 */
 		if (this.coinPos.equals(this.snakePos.getFirst())) {
 			this.score++;
-			snakePos.addLast(tail);
-			setGameboardState(tail,BODY_TILE);
-			setGameboardState(coinPos, BLANK_TILE);
 			addCoin();
-			setGameboardState(coinPos,COIN_TILE);
+		}else{
+			setGameboardState(this.snakePos.getLast(), BLANK_TILE);	
+			this.snakePos.removeLast();
 		}
 		
-		// Draw collector at new position.
+		//Add a head tile to the snake heads new position.
 		setGameboardState(this.snakePos.getFirst(), HEAD_TILE);
 	
 
-		// Check if all coins are found
+		// Check if snake is max size
 		if (this.snakePos.size() == 100) {
 			throw new GameOverException(this.score + 5);
 		}
