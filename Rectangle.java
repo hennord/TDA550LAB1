@@ -1,10 +1,9 @@
+
 package geometri;
 
 import java.awt.*;
 
-public class Rectangle extends CGeometricalFrom{
-	private int width;
-	private int height;
+public class Rectangle extends GeometricalAbstractForm{
 	
 	/**
 	 * Create a rectangle of color c with width width and height height at position (x,y) where (x,y) are the coordinates of
@@ -18,13 +17,10 @@ public class Rectangle extends CGeometricalFrom{
 	 * @throws <tt>IllegalPositionException</tt> - If any coordinate is negative. 
 	 */
 	 public Rectangle(int x, int y, int width, int height, Color c) throws IllegalPositionException{
-		 System.out.println("x ="+x); System.out.println("y ="+y);
+		 super(x,y,width,height,c);
 		 if(x<0 || y<0) throw new IllegalPositionException();
-		 this.x = x;
-		 this.y = y;
-		 this.width = width;
-		 this.height = height;
-		 this.c = c;
+		 this.area = width * height;
+		 this.perimeter = 2*width + 2*height;
 	 }
 	 
 	 /**
@@ -37,48 +33,17 @@ public class Rectangle extends CGeometricalFrom{
 	  * @param c - The color of the rectangle.
 	  */
 	 public Rectangle(GeometricalForm f, int width, int height, Color c){
-		 this.x = f.getX();
-		 this.y = f.getY();
-		 this.width = width;
-		 this.height = height;
-		 this.c = c; 
+		 super(f,width,height,c);
+		 this.area = width * height;
+		 this.perimeter = 2*width + 2*height;
+		 
 	 }
 	
 	 /**
 	 * {@inheritDoc}
 	 */
 	public void fill(Graphics g) {
-		g.setColor(this.c);
-		g.fillRect(x,y,width,height);
+		g.setColor(getColor());
+		g.fillRect(getX(),getY(),getWidth(),getHeight());
 	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public int getArea() {
-		return width*height;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public int getHeight() {
-		return height;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public int getPerimeter() {
-		return 2*width+2*height;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public int getWidth() {
-		return width;
-	}
-	
-
 }

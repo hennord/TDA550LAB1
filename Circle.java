@@ -1,9 +1,9 @@
 package geometri;
+
 import java.awt.*;
 import java.lang.Math;
 
-public class Circle extends CGeometricalFrom{
-	final private int diameter;
+public class Circle extends Oval{
 	
 	/**
 	 * Create a circle of color c and diameter diameter at position (x,y) where (x,y) are the coordinates of
@@ -16,11 +16,8 @@ public class Circle extends CGeometricalFrom{
 	 * @throws <tt>IllegalPositionException</tt> - If any coordinate is negative.
 	 */
 	public Circle(int x, int y, int diameter, Color c) throws IllegalPositionException{
+		super(x,y,diameter,diameter,c);
 		if(x<0 || y<0) throw new IllegalPositionException();
-		 this.x = x;
-		 this.y = y;
-		 this.diameter = diameter;
-		 this.c = c; 
 	}
 	
 	/**
@@ -31,45 +28,6 @@ public class Circle extends CGeometricalFrom{
 	 * @param c - The color of the circle.
 	 */
 	public Circle(GeometricalForm f, int diameter, Color c){
-		this.x = f.getX();
-		this.y = f.getY();
-		this.diameter = diameter;
-		this.c = c;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void fill(Graphics g) {
-		g.setColor(this.c);
-		g.fillOval(x,y,diameter,diameter);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public int getArea() {
-		return (int) (Math.pow(diameter/2,2)*Math.PI);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public int getHeight() {
-		return diameter;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public int getPerimeter() {
-		return (int) (diameter*Math.PI);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public int getWidth() {
-		return diameter;
+		super(f,diameter,diameter,c);
 	}
 }

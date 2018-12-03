@@ -3,11 +3,11 @@ package geometri;
 import java.awt.*;
 import java.lang.Math;
 
-public class Line extends CGeometricalFrom {
-	private int x1;
-	private int y1;
+public class Line extends GeometricalAbstractForm {
 	private int x2;
 	private int y2;
+	private final boolean inclinedUp;
+	private final boolean inclinedRight;
 	
 	/**
 	 * Create a line of color c with start position (x1,y1) and end position (x2,y2).
@@ -20,14 +20,23 @@ public class Line extends CGeometricalFrom {
 	 * @throws <tt>IllegalPositionException</tt> - If any coordinate is negative. 
 	 */
 	public Line(int x1, int y1, int x2, int y2, Color c) throws IllegalPositionException{
-		if(x<0 || y<0) throw new IllegalPositionException();
-		this.x1 = x1;
+		
+		super(x1,y1,Math.abs(x1-x2),Math.abs(y1-y2),c);
+		if(x1<0 || y1<0 || x2<0 || y2<0) throw new IllegalPositionException();
+		if(y2<y1){
+			inclinedUp = true;
+		}else {
+			inclinedUp = false;
+		}
+		if(x1<x2) {
+			inclinedRight = true;
+		}else {
+			inclinedRight = false;
+		}
 		this.x2 = x2;
-		this.y1 = y1;
 		this.y2 = y2;
-		this.x = Math.min(x1, x2);
-		this.y = Math.min(y1, y2);
-		this.c = c;
+		this.area = 0;
+		this.perimeter = (int) (2*Math.sqrt(Math.pow(getHeight(),2)+Math.pow(getWidth(), 2)));
 	}
 	
 	/**
@@ -39,63 +48,48 @@ public class Line extends CGeometricalFrom {
 	 * @param c - The color of the line.
 	 */
 	public Line(GeometricalForm f1, GeometricalForm f2, Color c){
-		this.x1 = f1.getX();
-		this.x2 = f2.getX();
-		this.y1 = f1.getY();
-		this.y2 = f2.getY();
-		this.x = Math.min(f1.getX(), f2.getX());
-		this.y = Math.min(f1.getY(), f2.getY());
-		this.c = c;
-
-		//this(f1.getX(),f1.getY(),f2.getX(),f2.getY(), c);
+		super(f1.getX(),f1.getY(),Math.abs(f1.getX()-f2.getX()),Math.abs(f1.getX()-f2.getX()),c);
+		if(f2.getY()<f1.getY()) {
+			inclinedUp = true;
+		}else {
+			inclinedUp = false;
+		}
+		if(f1.getX()<f2.getX()) {
+			inclinedRight = true;
+		}else {
+			inclinedRight = false;
+		}
+		this.area = 0;
+		this.perimeter = (int) (2*Math.sqrt(Math.pow(getHeight(),2)+Math.pow(getWidth(), 2)));
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
 	public void fill(Graphics g) {
-		g.setColor(this.c);
-		g.drawLine(x1,y1,x2,y2);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public int getArea() {
-		return 0;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public int getHeight() {
-		return Math.abs(y1-y2) ;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public int getPerimeter() {
-		return (int) (2*Math.sqrt(Math.pow(getHeight(),2)+Math.pow(getWidth(), 2)));
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public int getWidth() {
-		return Math.abs(x1-x2);
+		g.setColor(getColor());
+		if(inclinedUp ) {
+			if(inclinedRight) {
+				g.drawLine(getX(),getY(),getX()+getWidth(),getY()+getHeight());
+			}else {
+				g.drawLine(getX(),getY(),getX()-getWidth(),getY()+getHeight());
+			}
+		}else {
+			if(inclinedRight) {
+				g.drawLine(getX(),getY(),getX()+getWidth(),getY()-getHeight());
+			}else
+				g.drawLine(getX(),getY(),getX()-getWidth(),getY()-getHeight());
+		}
 	}
 	
-	 @Override
+	/* @Override
 	 public void place(int x, int y) throws IllegalPositionException{
 	    	if(x<0 || y<0) throw new IllegalPositionException();
-	    	int dx = this.x - x;
-	    	int dy = this.y - y;
+	    	int dx = getX() - x;
+	    	int dy = getY() - y;
 	    	move(dx, dy);
-	    	x1 -= dx;
-	    	y1 -= dy;
+	    	super.place(x,y);
 	    	x2 -= dx;
 	    	y2 -= dy;
-	    }
-
+	    }*/
 }

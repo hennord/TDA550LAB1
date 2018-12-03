@@ -3,9 +3,7 @@ package geometri;
 import java.awt.*;
 
 
-public class Oval extends CGeometricalFrom{
-	private int width;
-	private int height;
+public class Oval extends GeometricalAbstractForm{
 	
 	/**
 	 * Create an oval of color c with width width and height height at position (x,y) where (x,y) are the coordinates of
@@ -19,12 +17,10 @@ public class Oval extends CGeometricalFrom{
 	 * @throws <tt>IllegalPositionException</tt> - If any coordinate is negative.
 	 */
 	public Oval(int x, int y, int width, int height, Color c) throws IllegalPositionException{
+		super(x,y,width,height,c);
 		if(x<0 || y<0) throw new IllegalPositionException();
-		 this.x = x;
-		 this.y = y;
-		 this.width = width;
-		 this.height = height;
-		 this.c = c;
+		this.area = (int) (width*height*Math.PI)/4;
+		this.perimeter = (int) (Math.PI*Math.sqrt(0.5*Math.pow(width,2)+0.5*Math.pow(height,2)));
 	}
 	
 	/**
@@ -36,46 +32,16 @@ public class Oval extends CGeometricalFrom{
 	 * @param c - The color of the oval.
 	 */
 	public Oval(GeometricalForm f, int width, int height, Color c){
-		this.x = f.getX();
-		this.y = f.getY();
-		this.width = width;
-		this.height = height;
-		this.c = c;
+		super(f,width,height,c);
+		this.area = (int) (width*height*Math.PI)/4;
+		this.perimeter = (int) (Math.PI*Math.sqrt(0.5*Math.pow(width,2)+0.5*Math.pow(height,2)));
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
 	public void fill(Graphics g) {
-		g.setColor(this.c);
-		g.fillOval(x,y,width,height);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public int getArea() {
-		return (int) (width*height*Math.PI)/4;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public int getHeight() {
-		return height;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public int getPerimeter() {
-		return (int) (Math.PI*Math.sqrt(0.5*Math.pow(width,2)+0.5*Math.pow(height,2)));
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public int getWidth() {
-		return width;
+		g.setColor(getColor());
+		g.fillOval(getX(),getY(),getWidth(),getHeight());
 	}
 }

@@ -3,7 +3,7 @@ package geometri;
 import java.awt.Color;
 import java.awt.Graphics;
 
-public class Point extends CGeometricalFrom{
+public class Point extends GeometricalAbstractForm{
 	
 	/**
 	 * Create a point of color c at position (x,y).
@@ -14,10 +14,10 @@ public class Point extends CGeometricalFrom{
 	 * @throws <tt>IllegalPositionException</tt> - If any coordinate is negative.
 	 */
 	 public Point(int x, int y, Color c) throws IllegalPositionException{
+		 super(x,y,1,1,c);
 		 if(x<0 || y<0) throw new IllegalPositionException();
-		 this.x = x;
-		 this.y = y;
-		 this.c = c;
+		 this.area = 0;
+		 this.perimeter = 0;
 	 }
 	 
 	 /**
@@ -27,45 +27,14 @@ public class Point extends CGeometricalFrom{
 	  * @param c - The color of the point.
 	  */
 	 public Point(GeometricalForm f, Color c){
-		 this.x = f.getX();
-		 this.y = f.getY();
-		 this.c = c;
+		 super(f,1,1,c);
 	 }
 	
 	 /**
 	 * {@inheritDoc}
 	 */
 	public void fill(Graphics g) {
-		g.setColor(this.c);
-		g.fillOval(x,y,1,1);
+		g.setColor(getColor());
+		g.fillOval(getX(),getY(),1,1);
 	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public int getArea() {
-		return 0;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public int getHeight() {
-		return 1;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public int getPerimeter() {
-		return 0;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public int getWidth() {
-		return 1;
-	}
-	
 }
